@@ -14,7 +14,7 @@
  const load=url=>new Promise((ok,no)=>{const img=new Image();img.onload=()=>ok(img);img.onerror=no;img.src=url});
  const source=s=>parts[s];
  paper.style.backgroundImage='url('+source('map')+')';
- if(!location.hash.includes('capture'))frame.src='scene-v26.html'+(new URLSearchParams(location.search).has('qa')?'?qa=1':'')+'#nosong';
+ if(!location.hash.includes('capture'))frame.src='scene-v27.html'+(new URLSearchParams(location.search).has('qa')?'?qa=1':'')+'#nosong';
  const [map,mirror]=await Promise.all([load(source('map')),load(source('mirror'))]);
  function canvas(w=W,h=H){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
  const naked=canvas(),nx=naked.getContext('2d',{willReadFrequently:true});nx.drawImage(map,0,0);
