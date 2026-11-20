@@ -132,7 +132,7 @@
  function showProgress(){if(pending&&!ready&&!error)announce('正在载入谷底',{pct:progress>0?Math.round(progress*100):null,line:progress*100,note:progressLabel||'首次进入需要下载场景，请稍候'})}
  addEventListener('message',e=>{if(e.source!==frame.contentWindow)return;const m=e.data?.shinian;if(m==='progress'){const v=+e.data.value||0;if(v>progress+.004||e.data.label!==progressLabel){progress=Math.max(progress,v);progressLabel=String(e.data.label||'').slice(0,16);if(pending&&!ready){arm(60000);showProgress()}}}if(m==='ready'){ready=true;if(pending&&now()-at>=1400)startWorld()}if(m==='entered'&&pending){pending=false;clearTimeout(timeout);announce('');frame.inert=false;frame.tabIndex=0;layer.classList.add('departed');setTimeout(()=>{if(layer.classList.contains('departed')){layer.hidden=true;frame.focus()}},350);phase='world';controls()}if(m==='return-map')leave();if(m==='ready'||m==='entered')tellWorld();if(m==='sfx')sfx(e.data.name,{pan:+e.data.pan||0,gain:e.data.gain});if(m==='finale'){boost=1.7;if(bgmStarted&&!muted)fade(LEVEL*boost,3)}if(m==='calm'){boost=1;if(bgmStarted&&!muted)fade(LEVEL,3)}if(m==='world-error'){worldError=String(e.data.reason||'load');if(pending&&!ready)failWorld()}});
  window.__atlas={draw,phase:()=>phase};change('opening');
- if(!location.hash.includes('capture')){frame.src='scene-v30.html#nosong';frame.addEventListener('load',()=>frame.contentWindow.postMessage({shinian:'check'},'*'))}
+ if(!location.hash.includes('capture')){frame.src='scene-v31.html#nosong';frame.addEventListener('load',()=>frame.contentWindow.postMessage({shinian:'check'},'*'))}
 })().catch(e=>{document.getElementById('status').textContent='舆图载入失败，请刷新页面重试';document.getElementById('loadbox')?.classList.add('on');console.error(e)});
 
 </script></body></html>
