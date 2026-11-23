@@ -58,10 +58,14 @@ let received;
 const style = document.createElement('style');
 style.textContent = `
 #shinian-letters { inset:0; margin:auto auto auto clamp(14px,6vw,100px); width:min(690px,calc(100vw - 36px)); max-width:none; max-height:calc(100% - 28px); padding:clamp(18px,4vw,44px); box-sizing:border-box; border:1px solid #8e7852; border-radius:4px; background:radial-gradient(ellipse at top left,#f1e5cb,#d8c4a0); color:#241d16; font:17px/1.8 "Songti SC","Noto Serif SC",serif; box-shadow:0 15px 80px #000b; overflow:auto; overscroll-behavior:contain; }
-#shinian-letters::backdrop { background:linear-gradient(90deg,#11191ddd,#11191d52 77%,#11191d44); }
+#shinian-letters::backdrop { background:linear-gradient(90deg,#101719e8,#10171964 73%,#10171932),url("./author-letter-poster.jpg") center/cover; }
 #shinian-letters.writing { background:radial-gradient(ellipse at top left,#343434,#212729); color:#efe2c5; }
 #shinian-letters h2 { margin:0; font:600 clamp(23px,4vw,34px)/1.35 "Songti SC",serif; }
 #shinian-letters .sender { margin:.45em 0 1em; padding-bottom:.45em; border-bottom:1px solid #8e7852; font-size:14px; }
+#shinian-letters:not(.writing) .sender { color:#634729; }
+#shinian-letters .letter-content { display:grid; gap:14px; align-items:start; }
+#shinian-letters .letter-content.illustrated { grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); }
+#shinian-letters .letter-content img { margin:0; width:100%; }
 #shinian-letters .letter-body { white-space:pre-wrap; overflow-wrap:anywhere; margin:0 0 18px; }
 #shinian-letters button { font:inherit; color:#241d16; background:#e5cea0; border:1px solid #927444; padding:5px 13px; border-radius:2px; cursor:pointer; }
 #shinian-letters button.secondary { color:inherit; background:transparent; }
@@ -73,7 +77,11 @@ style.textContent = `
 #shinian-letters input[type=file] { display:block; max-width:100%; font:inherit; font-size:14px; margin:4px 0; }
 #shinian-letters .count { font-size:13px; text-align:right; }
 #shinian-letters [role=status] { font-size:14px; margin:8px 0 0; }
-@media (max-width:600px) { #shinian-letters { margin:auto; } }
+@media (max-width:600px) {
+  #shinian-letters { margin:auto; }
+  #shinian-letters .letter-content.illustrated { grid-template-columns:1fr; }
+  #shinian-letters .letter-content img { order:-1; max-height:26vh; }
+}
 `;
 document.head.append(style);
 
@@ -91,7 +99,7 @@ document.body.append(dialog);
 
 function showLetter(letter) {
   dialog.classList.remove('writing');
-  dialog.innerHTML = '<h2 id="letter-title">青铜门后的来信</h2><p class="sender"></p><div class="letter-body"></div><div class="actions"><button type="button" data-write>写给下一位旅人</button><button type="button" class="secondary" data-close>返回结局</button></div>';
+  dialog.innerHTML = '<h2 id="letter-title">青铜门后的来信</h2><p class="sender"></p><div class="letter-content"><div class="letter-body"></div></div><div class="actions"><button type="button" data-write>写给下一位旅人</button><button type="button" class="secondary" data-close>返回结局</button></div>';
   dialog.querySelector('.sender').textContent = letter.sender;
   const body = dialog.querySelector('.letter-body');
   body.textContent = letter.body;
@@ -99,6 +107,7 @@ function showLetter(letter) {
     const photo = new Image();
     photo.alt = letter.sender === '作者来信' ? '云顶裂谷全景，青铜门嵌在侧壁，远处可见九龙棺台' : '旅人在信中附上的照片';
     photo.src = letter.image;
+    body.parentElement.classList.add('illustrated');
     body.after(photo);
   }
   dialog.querySelector('[data-write]').onclick = showEditor;
