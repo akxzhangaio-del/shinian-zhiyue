@@ -126,7 +126,7 @@
    const bus=()=>ac.createGain(),o={pan:opt.pan||0};
    const S={
     hover(){const g=bus(),k=Math.max(.3,Math.min(1.6,+opt.gain||1));// v31：加强——青铜轻鸣（钟形泛音）+ 高处一点闪光 + 很轻的低频托底，约为原来的 3 倍响
-      [[659.3,.046,1.15],[659.3*2.76,.016,.62],[659.3*5.4,.008,.34]].forEach(([f,a,d])=>tone(f,d,a*k).connect(g));
+      [[659.3,.061,1.05],[659.3*2.76,.023,.57],[659.3*5.4,.01,.30]].forEach(([f,a,d])=>tone(f,d,a*k).connect(g));
       tone(1975.5,.26,.014*k,t+.035).connect(g);tone(2637,.2,.009*k,t+.07).connect(g);tone(130.8,.32,.028*k).connect(g);out(g,{wet:.45,...o})},
     click(){const g=bus();tone(1350,.09,.05).connect(g);tone(2650,.05,.02).connect(g);const n=nz(t,.03),f=ac.createBiquadFilter(),ng=ac.createGain();f.type='bandpass';f.frequency.value=4200;ng.gain.setValueAtTime(.05,t);ng.gain.exponentialRampToValueAtTime(.0001,t+.025);n.connect(f).connect(ng).connect(g);out(g,{wet:.12,...o})},
     shimmer(){const g=bus();for(let i=0;i<7;i++)tone(2200+Math.random()*4200,.9,.012,t+.05+i*.08).connect(g);out(g,{wet:.5,...o})},
@@ -150,7 +150,7 @@
  // —— 背景音乐：舆图第一次点击时淡入，进入裂谷后继续低音量播放；张起灵出门时略微抬起 ——
  // 曲目《十年人间》（粉丝向二创使用，版权归原作者）。右上角 ♪ 可静音，静音也会同步到谷底场景的环境声。
  const bgm=new Audio(),songSrc=(el('atlas-song')?.textContent||'').trim(),btn=el('bgm-toggle'),hintEl=el('soundhint');
- let muted=false,bgmStarted=false,boost=1,fadeRaf=0,gain=null,resumeOnShow=false,inWorld=false;const LEVEL=.3,ATLAS_LEVEL=.19;// v31：舆图上音乐低一些，进入谷底后再缓缓升到 LEVEL
+ let muted=false,bgmStarted=false,boost=1,fadeRaf=0,gain=null,resumeOnShow=false,inWorld=false;const LEVEL=.25,ATLAS_LEVEL=.15;// v31：舆图上音乐低一些，进入谷底后再缓缓升到 LEVEL
   const lvl=()=>(inWorld?LEVEL:ATLAS_LEVEL)*boost;
  try{muted=localStorage.getItem('shinian-muted')==='1'}catch{}
  if(songSrc&&!songSrc.startsWith('__')){bgm.src=songSrc;bgm.loop=true;bgm.preload='auto';btn.hidden=false}
@@ -170,7 +170,7 @@
  document.addEventListener('visibilitychange',()=>{if(document.hidden){if(!bgm.paused){resumeOnShow=true;bgm.pause()}}else if(resumeOnShow&&!muted){resumeOnShow=false;bgm.play().catch(()=>{})}});
  window.__bgm={get playing(){return !bgm.paused},get volume(){return getVol()},get muted(){return muted},setMuted};
  // v30：鼠标划过可点的地方时，轻轻响一声（浏览器要求先有一次点击才能出声，所以第一次点击之前不会响）
- for(const id of ['pin','prompt','inside','back'])el(id).addEventListener('pointerenter',()=>{if(sctx&&sctx.state==='running'&&!muted)sfx('hover',{gain:id==='pin'||id==='inside'?1.25:.9})});
+ for(const id of ['pin','prompt','inside','back'])el(id).addEventListener('pointerenter',()=>{if(sctx&&sctx.state==='running'&&!muted)sfx('hover',{gain:id==='pin'||id==='inside'?1.45:1.1})});
  el('pin').onclick=el('prompt').onclick=reveal;el('back').onclick=()=>change('map');
  el('inside').onclick=()=>{if(phase!=='mirror')return;pending=true;sfx('click');sfx('whoosh');change('enter');arm(90000);if(worldError)failWorld();else if(!ready)showProgress()};
  el('retry').onclick=()=>{error=ready=started=false;worldError=null;progress=0;progressLabel='',downloadBytes=0,downloadTotal=0;el('retry').hidden=true;announce('正在重新载入谷底',{line:0});frame.src=frame.src;arm(90000,'场景未能载入','请检查网络，并确认浏览器开启了图形加速')};
@@ -190,7 +190,7 @@
   gate.addEventListener('click',()=>{playBgm(2.5);sfxCtx();openAtlas()});
   addEventListener('keydown',e=>{if(!opened&&!gate.hidden&&!e.repeat){playBgm(2.5);sfxCtx();openAtlas()}})}
  window.__atlas={draw,phase:()=>phase,get opened(){return opened}};
- if(!location.hash.includes('capture')){frame.src='scene-v39.html#nosong';frame.addEventListener('load',()=>frame.contentWindow.postMessage({shinian:'check'},'*'))}
+ if(!location.hash.includes('capture')){frame.src='scene-v40.html#nosong';frame.addEventListener('load',()=>frame.contentWindow.postMessage({shinian:'check'},'*'))}
 })().catch(e=>{document.getElementById('status').textContent='舆图载入失败，请刷新页面重试';document.getElementById('loadbox')?.classList.add('on');console.error(e)});
 
 </script></body></html>
