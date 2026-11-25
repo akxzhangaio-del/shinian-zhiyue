@@ -5723,10 +5723,10 @@ function showControlHintOnInput(event){
 }
 addEventListener("pointermove",showControlHintOnInput,{passive:true});
 addEventListener("keydown",showControlHintOnInput);
-var lt={active:false,t:0,D:16.5,start:null,end:null,orbit:null,skip:null,skipT:0};
+var lt={active:false,t:0,D:17.8,start:null,end:null,orbit:null,skip:null,skipT:0};
 function Ww(i){
  const start=i.player.position.clone();
- start.z+=6;
+ start.z=-i.layout.paths.descent[0][1]-3;
  start.y=i.nav.ground(start.x,start.z,start.y+1)?.y??start.y;
  const end=i.player.position.clone();
  Object.assign(lt,{start,end,t:0,active:true,skip:null,skipT:0});
@@ -5738,6 +5738,7 @@ function Ww(i){
  ],false,"centripetal");
  i.mode("cine");
  i.state.cineSpeed=0;
+ i.actorSystem.characters.wu.visible=true;
  i.keys.clear();
  dr.hidden=true;
  na.classList.remove("on");
@@ -5762,22 +5763,23 @@ function k3(i,dt){
  lt.t+=dt;
  const t=lt.t;
  D3.style.transform="scaleX("+Math.min(1,t/lt.D).toFixed(3)+")";
- const walk=Ws(t,0,6);
+ const walk=Ws(t,0,10.2);
  i.player.position.copy(lt.start).lerp(lt.end,walk);
  const player=i.player.position;
  const ground=i.nav.ground(player.x,player.z,player.y+.5);
  if(ground)player.y=ground.y;
- i.player.rotation.y=ur(0,window.__followTour.track.sample(0).heading,Ws(t,14.7,lt.D));
+ i.player.rotation.y=ur(0,window.__followTour.track.sample(0).heading,Ws(t,16.4,lt.D));
  i.state.cineSpeed=dt>0?previous.distanceTo(player)/dt:0;
  const anchor=player.clone().add(xi(0,1.5,0));
- const reveal=Ws(t,4.5,9);
+ const reveal=Ws(t,4.5,13.7);
  const eye=player.clone().add(xi(0,ur(1.8,2.05,reveal),ur(3.2,1.9,reveal)));
- const look=eye.clone().add(xi(0,-.45,-24));
- look.lerp(xi(78,37,-179),reveal);
- if(t>=9)eye.copy(lt.orbit.getPointAt(Ws(t,9,15)));
+ if(t>=13.7)eye.copy(lt.orbit.getPointAt(Ws(t,13.7,16.9)));
  const safeEye=gi(anchor,eye,i.cameraBlockers||[],.38);
+ const forward=xi(0,-3.8,-24).normalize();
+ const towardGate=xi(78,45,-179).sub(safeEye).normalize();
+ const look=safeEye.clone().addScaledVector(forward.lerp(towardGate,reveal).normalize(),24);
  const tunnelFov=Math.min(34,Oe.radToDeg(2*Math.atan(Math.tan(Oe.degToRad(20))/i.camera.aspect)));
- Tf(i,safeEye,look,ur(tunnelFov,55,reveal));
+ Tf(i,safeEye,look,ur(tunnelFov,60,reveal));
  const title=t>=1.1&&t<5.4;
  if(title&&!na.classList.contains("on")&&t<1.6)no.play("chime",{pan:-.3});
  na.classList.toggle("on",title);
